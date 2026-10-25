@@ -1,3 +1,5 @@
+> **Fork mit Claude- und Deutsch-Voreinstellung.** Deutsche Anleitung: [ANLEITUNG.md](ANLEITUNG.md)
+
 <p align="center">
   <img src="tradingagents/assets/tauric-logo.svg" width="60%" alt="Tauric Research">
 </p>

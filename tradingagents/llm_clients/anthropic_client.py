@@ -23,6 +23,12 @@ _EFFORT_EXACT = {
 _EFFORT_MODEL = re.compile(r"^claude-(opus|sonnet|fable)-(\d+)(?:-(\d+))?$")
 _EFFORT_MIN_VERSION = {"opus": (4, 5), "sonnet": (4, 6), "fable": (5, 0)}
 
+# Models that reject forced tool use (``tool_choice`` "any"/"tool"). Function-calling
+# structured output then only offers the schema tool, and a model that answers in
+# text instead costs a free-text retry; native structured output
+# (``output_config.format``) is enforced by the API.
+_NO_FORCED_TOOL_CHOICE = ("claude-fable-5-1", "claude-opus-5-5", "claude-sonnet-5-5")
+
 
 def _supports_effort(model: str) -> bool:
     """Whether Anthropic accepts the ``effort`` parameter for this model."""
@@ -48,6 +54,12 @@ class NormalizedChatAnthropic(ChatAnthropic):
 
     def invoke(self, input, config=None, **kwargs):
         return normalize_content(super().invoke(input, config, **kwargs))
+
+    def with_structured_output(self, schema, *, method=None, **kwargs):
+        if method is None:
+            forced_tools = not self.model.lower().startswith(_NO_FORCED_TOOL_CHOICE)
+            method = "function_calling" if forced_tools else "json_schema"
+        return super().with_structured_output(schema, method=method, **kwargs)
 
 
 class AnthropicClient(BaseLLMClient):
