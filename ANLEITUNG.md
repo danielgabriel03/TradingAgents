@@ -26,7 +26,9 @@ Voreingestellte Modelle:
 
 ## Einrichten
 
-Voraussetzungen: Git und Docker mit Compose.
+Voraussetzungen: Git, und entweder Docker (auf dem Mac
+[Docker Desktop](https://www.docker.com/products/docker-desktop/), gestartet) oder der
+Weg [ohne Docker](#ohne-docker).
 
 ```bash
 git clone https://github.com/danielgabriel03/TradingAgents.git
@@ -76,15 +78,26 @@ Nach Änderungen am Code oder einem Update das Image neu bauen: `docker compose 
 
 ### Ohne Docker
 
-Python 3.11 oder neuer:
+[uv](https://docs.astral.sh/uv/) installiert bei Bedarf auch ein passendes Python
+(TradingAgents braucht 3.11 oder neuer; macOS bringt oft nur ein älteres `python3` mit).
+uv einmalig installieren:
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
-pip install .
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source $HOME/.local/bin/env
+```
+
+Dann im Projektordner:
+
+```bash
+uv venv --python 3.13
+source .venv/bin/activate
+uv pip install .
 tradingagents
 ```
 
-Die `.env` im Projektordner wird automatisch gelesen. Ergebnisse liegen dann unter
+In einem neuen Terminal vor dem Start wieder `source .venv/bin/activate` im Projektordner
+ausführen. Die `.env` im Ordner, in dem `tradingagents` startet, wird automatisch gelesen. Ergebnisse liegen dann unter
 `~/.tradingagents/logs/` (Berichte in `reports/`).
 
 ## Kosten im Griff behalten
@@ -123,12 +136,21 @@ absichtlich englisch, damit die Entscheidung zuverlässig erkannt wird.
 
 ## Updates vom Original übernehmen
 
+Einmalig:
+
 ```bash
-git remote add upstream https://github.com/TauricResearch/TradingAgents.git   # einmalig
+git remote add upstream https://github.com/TauricResearch/TradingAgents.git
+```
+
+Bei jedem Update:
+
+```bash
 git fetch upstream
 git merge upstream/main
 docker compose build
 ```
+
+Ohne Docker statt `docker compose build`: `uv pip install .` bei aktivierter `.venv`.
 
 Alternativ auf GitHub im Fork „Sync fork“ wählen. Die Anpassungen dieses Forks sind bewusst
 klein gehalten, damit Updates ohne Konflikte durchgehen: `.env.example`, diese Anleitung,
