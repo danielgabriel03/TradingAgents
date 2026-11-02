@@ -93,8 +93,15 @@ Dann im Projektordner:
 uv venv --python 3.13
 source .venv/bin/activate
 uv pip install .
+p=$(python -m certifi) && echo "SSL_CERT_FILE=$p" >> .env
 tradingagents
 ```
+
+Die vierte Zeile trägt einmalig ein Zertifikatspaket in die `.env` ein. Ohne sie findet das
+von uv installierte Python auf dem Mac keine Stammzertifikate: StockTwits und Reddit
+scheitern dann mit `CERTIFICATE_VERIFY_FAILED`, und der Sentiment-Analyst hat kaum Daten.
+Kursdaten und Claude sind davon nicht betroffen. Die Zeile setzt voraus, dass die `.env`
+aus „Einrichten“ schon existiert.
 
 In einem neuen Terminal vor dem Start wieder `source .venv/bin/activate` im Projektordner
 ausführen. Die `.env` im Ordner, in dem `tradingagents` startet, wird automatisch gelesen. Ergebnisse liegen dann unter
