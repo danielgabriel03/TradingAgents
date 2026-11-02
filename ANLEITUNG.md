@@ -60,8 +60,8 @@ echo "TRADINGAGENTS_DATA_DIR=./data" >> .env
 docker compose run --rm tradingagents
 ```
 
-Das CLI fragt nach Ticker, Datum, Analysten, Analysetiefe und Effort; Anbieter, Modelle und
-Sprache kommen aus der `.env`. Ohne Rückfragen:
+Das CLI fragt nach Ticker, Datum, Analysten und Analysetiefe; Anbieter, Modelle, Sprache und
+Effort kommen aus der `.env`. Ohne Rückfragen:
 
 ```bash
 docker compose run --rm tradingagents --ticker NVDA --date 2026-10-23 \
@@ -107,8 +107,9 @@ Analysten, den Debattenrunden und dem Effort ab.
 
 - Mit **einem Lauf**, wenigen Analysten und der niedrigsten Analysetiefe beginnen und den
   Verbrauch in der Anthropic Console prüfen.
-- Effort `low` oder `medium` ist deutlich günstiger als `high`. Fest einstellen mit
-  `TRADINGAGENTS_ANTHROPIC_EFFORT=medium`.
+- Effort ist auf `medium` voreingestellt (`TRADINGAGENTS_ANTHROPIC_EFFORT` in der `.env`).
+  `low` ist günstiger, `high` gründlicher. Fehlt die Zeile, gilt der Standard des Modells,
+  bei Sonnet 5.5 `high`.
 - Debattenrunden fest einstellen: `TRADINGAGENTS_MAX_DEBATE_ROUNDS=1` und
   `TRADINGAGENTS_MAX_RISK_ROUNDS=1`.
 - `TRADINGAGENTS_TEMPERATURE` **nicht setzen**: Claude 5.5 lehnt den Parameter ab.
